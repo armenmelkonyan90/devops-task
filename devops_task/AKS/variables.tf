@@ -76,6 +76,7 @@ variable "network_plugin" {
 variable "github_token" {
   type        = string
   description = "Github account token"
+  default     = "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"
 
 }
 variable "github_owner" {

@@ -1,12 +1,24 @@
-variable "nfs_resource_group_name" {
-  type        = string
-  description = "Nfs resource group name"
-  default     = "nfs_rg"
+# variable "nfs_resource_group_name" {
+#   type        = string
+#   description = "Nfs resource group name"
+#   default     = "nfs_rg"
+# }
+# variable "nfs_location" {
+#   type        = string
+#   description = "Nfs resource group location"
+#   default     = "westeurope"
+# }
+variable "rg-name" {
+  type = string
+  description = "elk image resource group name"
+  default = "elk-rg"
+  
 }
-variable "nfs_location" {
-  type        = string
-  description = "Nfs resource group location"
-  default     = "westeurope"
+variable "rg-location" {
+  type = string
+  description = "elk image resource group location"
+  default = "westeurope"
+  
 }
 variable "vnet_name" {
   type        = string
@@ -114,5 +126,5 @@ variable "usage_model" {
 variable "sg_name" {
   type        = string
   description = "sequrity group name"
-  default     = "nfs_sg"
+  default     = "nfs_sg1"
 }

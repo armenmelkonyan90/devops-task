@@ -49,7 +49,7 @@ def encode_acr_name_pswd(cred):
 
 def outs():
     nfs_acr_out  = nfs_acr.output()
-    acr_username = str(nfs_acr_out['acr_username']['value'])
+    acr_username = str(nfs_acr_out['acr_name']['value'])
     acr_password = str(nfs_acr_out['acr_password']['value'])
     nfs_address  = str(nfs_acr_out['nfs_public_ip']['value'])
     
@@ -58,17 +58,19 @@ def outs():
 def main(token):
     nfs_acr.apply(skip_plan=True)
     outputs                = outs()
-    
+    print("nfs applied")
     acrcred                = outputs[0]+":"+outputs[1]
     nfsaddr                = outputs[2]
     acr_encoded_cred       = encode_acr_name_pswd(acrcred)
     acr_config_reg_encoded = encode_reg_config(acr_encoded_cred)
-    
+    print("git clone")
     git_clone(token)
-
+    print("changing files")
     change_secret_file(acr_config_reg_encoded)
     change_pv_file(nfsaddr)
-
+    print("git commit")
+    git_commit()
+    print("aks")
     aks.apply(skip_plan=True)
 
 if __name__ == "__main__":
@@ -77,3 +79,4 @@ if __name__ == "__main__":
     args = arguments.parse_args()
 
     main(args.token)
+
