@@ -8,7 +8,6 @@ import yaml
 import argparse
 
 nfs_acr = Terraform(working_dir="./nfs-acr")
-aks = Terraform(working_dir="./AKS")
 
 def git_clone(token):
     git.Git(".").clone("https://hakobmkoyan771:"+str(token)+"@github.com/hakobmkoyan771/infra.git")
@@ -56,22 +55,24 @@ def outs():
     return acr_username,acr_password,nfs_address
 
 def main(token):
+    print("Applying NFS-ACR")
     nfs_acr.apply(skip_plan=True)
     outputs                = outs()
-    print("nfs applied")
+    print("NFS-ACR applied")
     acrcred                = outputs[0]+":"+outputs[1]
     nfsaddr                = outputs[2]
     acr_encoded_cred       = encode_acr_name_pswd(acrcred)
     acr_config_reg_encoded = encode_reg_config(acr_encoded_cred)
-    print("git clone")
+    print("Cloning infra repo")
     git_clone(token)
-    print("changing files")
+    print("Configuring Image Pull Secret")
     change_secret_file(acr_config_reg_encoded)
+    print("Configuring NFS Persistent Volume")
     change_pv_file(nfsaddr)
-    print("git commit")
+    print("Commiting changes")
     git_commit()
-    print("aks")
-    aks.apply(skip_plan=True)
+    print("Cleaning garbage")
+    os.system("sudo rm -rf ./infra")
 
 if __name__ == "__main__":
     arguments = argparse.ArgumentParser(description="Git token")
