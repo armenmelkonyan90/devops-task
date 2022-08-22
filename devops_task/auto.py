@@ -55,6 +55,8 @@ def outs():
     return acr_username,acr_password,nfs_address
 
 def main(token):
+    print("Initializing NFS-ACR")
+    nfs_acr.init()
     print("Applying NFS-ACR")
     nfs_acr.apply(skip_plan=True)
     outputs                = outs()
