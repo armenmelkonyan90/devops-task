@@ -1,0 +1,31 @@
+- name: set virtual memory max_map_count
+  sysctl:
+    name: vm.max_map_count
+    value: "262144"
+    sysctl_set: yes
+
+- name: Installing elasticsearch
+  ansible.builtin.apt:
+      name: elasticsearch={{ version }}
+  register: elastic_log
+
+- name: apt debug
+  ansible.builtin.debug:
+    var: elastic_log
+
+- name: Configuring elasticsearch
+  ansible.builtin.template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: elasticsearch
+
+- name: force systemd reload
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Starting elasticsearch service
+  ansible.builtin.service:
+    name: elasticsearch
+    state: started
+    enabled: true

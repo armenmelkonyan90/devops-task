@@ -1,0 +1,27 @@
+- name: Installign logstash
+  ansible.builtin.apt:
+    deb: "https://artifacts.elastic.co/downloads/logstash/logstash-{{ version }}-amd64.deb"
+
+- name: Configuring logstash (yml)
+  ansible.builtin.template:
+    src: logstash.yml.j2
+    dest: /etc/logstash/logstash.yml
+    owner: root
+    group: elasticsearch
+
+- name: Configuring logstash pipline (conf)
+  ansible.builtin.template:
+    src: logstash_pipeline.conf.j2
+    dest: /etc/logstash/conf.d/logstash_pipeline.conf
+    owner: root
+    group: elasticsearch
+
+- name: force systemd reload
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Starting logstash service
+  ansible.builtin.service:
+    name: logstash
+    state: started
+    enabled: true

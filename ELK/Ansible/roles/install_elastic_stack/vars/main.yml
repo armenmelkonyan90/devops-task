@@ -1,0 +1,6 @@
+version: 8.3.3
+
+elasticsearch_port: 9200
+kibana_port: 5600
+logstash_port: 9600
+logstash_pipline_port: 10000

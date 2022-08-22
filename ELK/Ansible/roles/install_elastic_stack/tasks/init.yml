@@ -1,0 +1,21 @@
+# Set max_map_count, add Elastic's repo to apt and install dependencies
+
+- name: Getting the gpg key for the Elastic repo
+  ansible.builtin.get_url:
+      url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      dest: /etc/apt/trusted.gpg.d/elastic.asc
+
+- name: Adding the Elastic repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/trusted.gpg.d/elastic.asc] https://artifacts.elastic.co/packages/8.x/apt stable main"
+    state: present
+
+- name: apt update cache
+  ansible.builtin.apt:
+    update_cache: true
+  changed_when: false
+
+- name: Installing dependencies
+  ansible.builtin.apt:
+    name: 
+    - apt-transport-https

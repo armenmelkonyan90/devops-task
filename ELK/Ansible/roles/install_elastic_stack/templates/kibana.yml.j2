@@ -1,0 +1,31 @@
+# network
+server.port: {{ kibana_port }}
+server.host: "0.0.0.0"
+elasticsearch.hosts: ["http://localhost:{{ elasticsearch_port }}"]
+
+# xpack
+#xpack:
+#  security.encryptionKey: "This meassage is 50 characters long or more... Idk"
+#  reporting.kibanaServer.hostname: localhost
+#  reporting.roles.enabled: false
+  
+
+# credentials
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "pass"
+
+# logging config
+logging:
+  appenders:
+    file:
+      type: file
+      fileName: /var/log/kibana/kibana.log
+      layout:
+        type: json
+  root:
+    appenders:
+      - default
+      - file
+
+# other
+pid.file: /run/kibana/kibana.pid

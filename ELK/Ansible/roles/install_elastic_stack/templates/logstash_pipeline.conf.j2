@@ -1,0 +1,15 @@
+input {
+  http {
+    port => {{ logstash_pipline_port }}
+    codec => "json"
+  }
+}
+
+output {
+  stdout {}
+  elasticsearch {
+    hosts => "localhost:{{ elasticsearch_port }}"
+    index => 'logs-%{+YYYY.MM.dd}'
+  }
+}
+

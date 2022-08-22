@@ -1,0 +1,22 @@
+---
+
+# Set up the environment
+- import_tasks: init.yml
+# Install and configure elasticsearch
+- import_tasks: elasticsearch.yml
+# Install and configure kibana
+- import_tasks: kibana.yml
+# Install and configure logstash
+- import_tasks: logstash.yml
+# Install and configure beats
+- import_tasks: beats.yml
+
+# Outputs
+- name: Get my public IP
+  ipify_facts:
+  register: public_ip
+
+- name: public IP Address
+  debug: 
+    msg: "Kibana: {{ public_ip.ansible_facts.ipify_public_ip }}:{{ kibana_port }}\n
+    Logstash (send http here): {{ public_ip.ansible_facts.ipify_public_ip }}:{{ logstash_pipline_port }}"
