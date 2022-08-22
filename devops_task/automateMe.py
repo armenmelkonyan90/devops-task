@@ -5,11 +5,20 @@ import json
 import base64
 import git
 import yaml
+import argparse
 
-git.Git(".").clone("https://github.com/hakobmkoyan771/infra.git")
+
 
 nfs_acr = Terraform(working_dir="./nfs-acr")
 aks = Terraform(working_dir="./AKS")
+
+def git_clone(token):
+    git.Git(".").clone("https://hakobmkoyan771:"+str(token)+"@github.com/hakobmkoyan771/infra.git")
+
+def git_commit():
+    os.system('''cd infra; git add .''')
+    os.system('''cd infra; git commit -m "Configured Secrets and Volumes"''')
+    os.system('''cd infra; git push''')
 
 def change_pv_file(addr):
     with open('infra/Volumes/pv.yaml') as pvManifest:
@@ -48,7 +57,7 @@ def outs():
     
     return acr_username,acr_password,nfs_address
 
-def main():
+def main(token):
     nfs_acr.apply(skip_plan=True)
     outputs                = outs()
     
@@ -57,11 +66,16 @@ def main():
     acr_encoded_cred       = encode_acr_name_pswd(acrcred)
     acr_config_reg_encoded = encode_reg_config(acr_encoded_cred)
     
+    git_clone(token)
+
     change_secret_file(acr_config_reg_encoded)
     change_pv_file(nfsaddr)
 
     aks.apply(skip_plan=True)
-    
 
 if __name__ == "__main__":
-    main()
+    arguments = argparse.ArgumentParser(description="Git token")
+    arguments.add_argument("--token", type=str, required=True, help="Git Token")
+    args = arguments.parse_args()
+
+    main(args.token)
