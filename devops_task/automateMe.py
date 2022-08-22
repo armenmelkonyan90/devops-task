@@ -7,8 +7,6 @@ import git
 import yaml
 import argparse
 
-
-
 nfs_acr = Terraform(working_dir="./nfs-acr")
 aks = Terraform(working_dir="./AKS")
 
