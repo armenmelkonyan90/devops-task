@@ -3,6 +3,5 @@ output "acr_username" {
 
 }
 output "acr_password" {
-  value     = azurerm_container_registry.acr.admin_password
-  sensitive = true
+  nonsensitive(sha256(azurerm_container_registry.acr.admin_password))
 }
