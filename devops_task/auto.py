@@ -74,7 +74,7 @@ def main(token):
     print("Commiting changes")
     git_commit()
     print("Cleaning garbage")
-    os.system("sudo rm -rf ./infra")
+    os.system("rm -rf ./infra")
 
 if __name__ == "__main__":
     arguments = argparse.ArgumentParser(description="Git token")
