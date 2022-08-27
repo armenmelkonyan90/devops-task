@@ -58,31 +58,42 @@ def outs():
 def main(token):
     print("Initializing ElasticSearch")
     elastic.init()
+    
     print("Initializing NFS-ACR")
     nfs_acr.init()
+    
     print("Applying ElasticSearch")
     elastic.apply(skip_plan=True)
-    print("ElasticSearch applied")
+
     print("Applying NFS-ACR")
     nfs_acr.apply(skip_plan=True)
     outputs                = outs()
-    print("NFS-ACR applied")
     acrcred                = outputs[0]+":"+outputs[1]
     nfsaddr                = outputs[2]
     acr_encoded_cred       = encode_acr_name_pswd(acrcred)
     acr_config_reg_encoded = encode_reg_config(acr_encoded_cred)
+    
     print("Cloning infra repo")
     git_clone(token)
+    
     print("Configuring Image Pull Secret")
     change_secret_file(acr_config_reg_encoded)
+    
     print("Configuring NFS Persistent Volume")
     change_pv_file(nfsaddr)
+    
     print("Commiting changes")
     git_commit()
+    
     print("Cleaning garbage")
     os.system("rm -rf ./infra")
     
-    print(nfs_acr.output())
+    print("---------------------")
+    print("OUTPUTS")
+    print("---------------------")
+    print("ACR NAME: ", outputs[0])
+    print("ACR PASSWORD: ", outputs[1])
+    print("ACR ENDPONIT: ", outputs[0], ".azurecr.io", sep="")
 
 if __name__ == "__main__":
     arguments = argparse.ArgumentParser(description="Git token")
