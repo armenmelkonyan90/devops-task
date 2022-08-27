@@ -18,9 +18,9 @@ variable "sku" {
 }
 variable "rg-name" {
   default = "elk-rg"
-  
+
 }
 variable "rg-location" {
   default = "westeurope"
-  
+
 }

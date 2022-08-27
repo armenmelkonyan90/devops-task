@@ -1,8 +1,7 @@
 module "elastic" {
-  source = "../../modules/elastic"
+  source = "../../modules/Elastic_Stack"
 }
 
 output "elastic-public-ip" {
-	value = module.elastic.elastic-public-ip
-  
+  value = module.elastic.elastic-public-ip
 }

@@ -12,7 +12,7 @@ resource "aws_route_table" "virtual_route" {
 }
 
 resource "aws_route_table_association" "virtual_route_association" {
-  count = var.subnet_count
-  subnet_id = aws_subnet.virtual_subnet_1[count.index].id
+  count          = var.subnet_count
+  subnet_id      = aws_subnet.virtual_subnet_1[count.index].id
   route_table_id = aws_route_table.virtual_route.id
 }

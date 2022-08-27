@@ -8,6 +8,7 @@ import yaml
 import argparse
 
 nfs_acr = Terraform(working_dir="./nfs-acr")
+elastic = Terraform(working_dir="./elastic")
 
 def git_clone(token):
     git.Git(".").clone("https://hakobmkoyan771:"+str(token)+"@github.com/hakobmkoyan771/infra.git")
@@ -55,8 +56,13 @@ def outs():
     return acr_username,acr_password,nfs_address
 
 def main(token):
+    print("Initializing ElasticSearch")
+    elastic.init()
     print("Initializing NFS-ACR")
     nfs_acr.init()
+    print("Applying ElasticSearch")
+    elastic.apply(skip_plan=True)
+    print("ElasticSearch applied")
     print("Applying NFS-ACR")
     nfs_acr.apply(skip_plan=True)
     outputs                = outs()
@@ -75,6 +81,8 @@ def main(token):
     git_commit()
     print("Cleaning garbage")
     os.system("rm -rf ./infra")
+    
+    print(nfs_acr.output())
 
 if __name__ == "__main__":
     arguments = argparse.ArgumentParser(description="Git token")
@@ -82,4 +90,3 @@ if __name__ == "__main__":
     args = arguments.parse_args()
 
     main(args.token)
-

@@ -103,13 +103,13 @@ resource "azurerm_virtual_machine" "main" {
     computer_name  = var.computer-name  #"hostname"
     admin_username = var.admin-username #"testadmin"
     admin_password = var.admin-password #"Password1234!"
-    
+
   }
-  
+
   os_profile_linux_config {
     disable_password_authentication = var.pass-auth #false
     ssh_keys {
-	  path = "/home/${var.admin-username}/.ssh/authorized_keys"
+      path     = "/home/${var.admin-username}/.ssh/authorized_keys"
       key_data = file("~/.ssh/devtask.pub")
     }
   }

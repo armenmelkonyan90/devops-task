@@ -24,6 +24,6 @@ variable "nfs_ports_egress" {
 }
 
 variable "user_data_path" {
-  type = string
+  type    = string
   default = "./custom_data.sh"
 }
