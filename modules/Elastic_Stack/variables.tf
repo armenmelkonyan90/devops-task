@@ -73,7 +73,7 @@ variable "vm-name" {
 variable "source-image-id" {
   type        = string
   description = "elastic search image id"
-  default     = "/subscriptions/7014b7d6-c531-45a6-890b-c51b97f7ceb0/resourceGroups/elk-rg/providers/Microsoft.Compute/images/elkimage"
+  default     = "/subscriptions/05a257df-6485-44a0-a551-8b67b0d8a5f5/resourceGroups/elk-rg/providers/Microsoft.Compute/images/elkimage"
 
 }
 variable "os-name" {
