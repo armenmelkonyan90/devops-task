@@ -7,6 +7,6 @@ resource "aws_instance" "virtual_instance_1" {
   user_data              = file(var.user_data_path)
 
   tags = {
-    Name = "Virtual Ubuntu Instance"
+    Name = "NFS Instance"
   }
 }
