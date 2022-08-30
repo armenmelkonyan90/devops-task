@@ -32,8 +32,8 @@ def change_secret_file(cred):
         with open('infra/Secrets/webapps-reg-secret.yaml', 'w') as newManifest:
             yaml.dump(data, newManifest)
 
-def encode_reg_config(acr_name_pswd):
-    dockerconfigjson = '''{"auths":{"https://index.docker.io/v1/":{"auth":"'''+str(acr_name_pswd)+'''"}}}'''
+def encode_reg_config(acr_name_pswd, reg_name):
+    dockerconfigjson = '''{"auths":{"'''+str(reg_name)+'''.azurecr.io":{"auth":"'''+str(acr_name_pswd)+'''"}}}'''
     msg_bytes    = dockerconfigjson.encode('ascii')
     base64_bytes = base64.b64encode(msg_bytes)
     base64_msg   = base64_bytes.decode('ascii')
@@ -52,8 +52,11 @@ def outs():
     acr_username = str(nfs_acr_out['acr_name']['value'])
     acr_password = str(nfs_acr_out['acr_password']['value'])
     nfs_address  = str(nfs_acr_out['nfs_public_ip']['value'])
-    
-    return acr_username,acr_password,nfs_address
+
+    elastic_out     = elastic.output()
+    elastic_address = str(elastic_out['elastic-public-ip']['value'])
+
+    return acr_username,acr_password,nfs_address,elastic_address
 
 def main(token):
     print("Initializing ElasticSearch")
@@ -71,7 +74,7 @@ def main(token):
     acrcred                = outputs[0]+":"+outputs[1]
     nfsaddr                = outputs[2]
     acr_encoded_cred       = encode_acr_name_pswd(acrcred)
-    acr_config_reg_encoded = encode_reg_config(acr_encoded_cred)
+    acr_config_reg_encoded = encode_reg_config(acr_encoded_cred, outputs[0])
     
     print("Cloning infra repo")
     git_clone(token)
@@ -94,6 +97,7 @@ def main(token):
     print("ACR NAME: ", outputs[0])
     print("ACR PASSWORD: ", outputs[1])
     print("ACR ENDPONIT: ", outputs[0], ".azurecr.io", sep="")
+    print("ELASTIC SEARCH: ", outputs[3])
 
 if __name__ == "__main__":
     arguments = argparse.ArgumentParser(description="Git token")
